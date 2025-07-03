@@ -313,7 +313,7 @@
                 return;
             }
 
-            let tableHTML = `<table id="history-table"><thead><tr><th>วันที่</th><th>ผู้ที่มาเรียน</th></tr></thead><tbody>`;
+            let tableHTML = `<table id="history-table"><thead><tr><th>วันที่</th><th>คนที่มาซ้อม</th></tr></thead><tbody>`;
             sortedDates.forEach(date => {
                 const presentList = history[date].join(', ');
                 tableHTML += `<tr><td>${date}</td><td>${presentList || '-'}</td></tr>`;
