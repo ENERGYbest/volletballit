@@ -3,374 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบเช็กชื่อ (เลือกวันได้)</title>
-    <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+    <title>ระบบเช็กชื่อ V.Premium (Fixed)</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
     <style>
         :root {
-            --primary-color: #007bff;
-            --success-color: #28a745;
-            --warning-color: #ffc107;
-            --light-gray: #f8f9fa;
-            --dark-gray: #343a40;
-            --white: #ffffff;
-            --border-color: #dee2e6;
-            --shadow-color: rgba(0, 0, 0, 0.1);
+            --hue: 210;
+            --primary-color: hsl(var(--hue), 85%, 55%);
+            --bg-light: #f4f6f9;
+            --bg-dark: #191c29;
+            --card-light: rgba(255, 255, 255, 0.75);
+            --card-dark: rgba(40, 45, 70, 0.6);
+            --text-light: #f0f0f0;
+            --text-dark: #121212;
+            --shadow-light: rgba(31, 38, 135, 0.1);
+            --shadow-dark: rgba(0, 0, 0, 0.2);
+            --border-light: rgba(255, 255, 255, 0.3);
+            --border-dark: rgba(255, 255, 255, 0.1);
+            --accordion-btn-light: #ffffff;
+            --accordion-btn-dark: #1f233d;
+            
+            --bg-color: var(--bg-light);
+            --card-bg-color: var(--card-light);
+            --text-color: var(--text-dark);
+            --shadow-color: var(--shadow-light);
+            --border-color: var(--border-light);
+            --accordion-btn-color: var(--accordion-btn-light);
         }
-
+        body.dark-mode {
+            --bg-color: var(--bg-dark);
+            --card-bg-color: var(--card-dark);
+            --text-color: var(--text-light);
+            --shadow-color: var(--shadow-dark);
+            --border-color: var(--border-dark);
+            --accordion-btn-color: var(--accordion-btn-dark);
+        }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to right, #e9ecef, #f8f9fa);
-            color: var(--dark-gray);
-            margin: 0;
-            padding: 1rem;
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.5s ease, color 0.5s ease;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            min-height: 100vh;
         }
-
-        .container {
-            background-color: var(--white);
-            padding: 2rem;
-            border-radius: 16px;
-            box-shadow: 0 8px 25px var(--shadow-color);
-            max-width: 800px;
-            margin: 2rem auto;
-            transition: padding 0.3s ease;
-        }
-        h1 {
-            text-align: center;
-            color: var(--primary-color);
-            font-size: 2.2rem;
-            margin-bottom: 0.5rem;
-        }
-        h2 {
-            text-align: center;
-            color: var(--dark-gray);
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 0.5rem;
-            margin-top: 2.5rem;
-            margin-bottom: 1.5rem;
-        }
-        .date-selector-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 2rem;
-            padding: 1rem;
-            background-color: var(--light-gray);
-            border-radius: 8px;
-        }
-        #date-selector {
-            font-size: 1rem;
-            padding: 10px;
+        .main-container {
+            max-width: 900px;
+            background: var(--card-bg-color);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 1.5rem;
             border: 1px solid var(--border-color);
-            border-radius: 5px;
-            cursor: pointer;
+            box-shadow: 0 12px 32px 0 var(--shadow-color);
+            padding: 2.5rem;
+            transition: background-color 0.5s ease, border 0.5s ease;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-        }
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-        th {
-            background-color: var(--light-gray);
-            font-weight: 600;
-        }
-        td:last-child { text-align: center; }
-        tr:hover {
-            background-color: #f1f3f5;
-        }
-        input[type="checkbox"] {
-            transform: scale(1.6);
-            cursor: pointer;
-            accent-color: var(--primary-color);
-        }
-        input[type="checkbox"]:disabled {
-            cursor: not-allowed;
-            accent-color: var(--border-color);
-        }
-        .button-group {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-        .action-button {
-            flex-grow: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            text-transform: uppercase;
-        }
-        .action-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
-        #save-btn {
-            background-color: var(--success-color);
-            color: var(--white);
-        }
-        #edit-btn {
-            background-color: var(--warning-color);
-            color: var(--dark-gray);
-        }
-        #export-btn {
-            background-color: var(--primary-color);
-            color: var(--white);
-            margin-top: 1.5rem;
-            width: 100%;
-        }
-        #history-container {
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 0.5rem;
-        }
-        #history-table {
-            font-size: 0.95em;
-            word-break: break-word;
-        }
-        #history-table th, #history-table td {
-            padding: 10px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            body {
-                padding: 0.5rem;
-            }
-            .container {
-                padding: 1.5rem;
-                margin: 1rem auto;
-            }
-            h1 { font-size: 1.8rem; }
-            h2 { font-size: 1.5rem; }
-            th, td { padding: 0.8rem; }
-            .action-button { font-size: 1rem; padding: 10px; }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 1rem;
-            }
-            .date-selector-container {
-                flex-direction: column;
-            }
-            .button-group {
-                flex-direction: column;
-            }
-            th, td {
-                padding: 0.6rem;
-                font-size: 0.9rem;
-            }
-            h1 { font-size: 1.6rem; }
-            h2 { font-size: 1.3rem; }
-        }
+        .main-header { color: var(--primary-color); text-shadow: 1px 1px 2px var(--shadow-color); }
+        .theme-switch-wrapper { display: flex; align-items: center; position: absolute; top: 1.5rem; right: 1.5rem; z-index: 1000; }
+        .theme-switch { display: inline-block; height: 24px; position: relative; width: 50px; margin: 0 10px; }
+        .theme-switch input { display: none; }
+        .slider { background-color: #ccc; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 34px; }
+        .slider:before { background-color: #fff; bottom: 3px; content: ""; height: 18px; left: 3px; position: absolute; transition: .4s; width: 18px; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(26px); }
+        .form-control, .input-group-text { background-color: var(--card-bg-color) !important; color: var(--text-color) !important; border-color: var(--border-color) !important; }
+        .form-control::placeholder { color: var(--text-color) !important; opacity: 0.6; }
+        .btn { transition: all 0.2s ease-in-out; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 4px 12px var(--shadow-color); }
+        .table { --bs-table-bg: transparent; --bs-table-hover-bg: rgba(120, 120, 120, 0.1); --bs-table-color: var(--text-color); border-radius: 0.75rem; overflow: hidden; }
+        .table > :not(caption) > * > * { border-bottom-width: 0; }
+        .table > thead { border-bottom: 1px solid var(--border-color); }
+        .accordion-item { background-color: transparent; border: 1px solid var(--border-color); border-radius: 0.75rem !important; }
+        .accordion-button { background-color: var(--accordion-btn-color); color: var(--text-color); transition: background-color 0.5s ease, color 0.5s ease; }
+        .accordion-button:not(.collapsed) { background-color: var(--primary-color); color: white; }
+        .accordion-button:focus { box-shadow: 0 0 0 0.25rem hsla(var(--hue), 85%, 55%, 0.25); }
+        .accordion-body { background-color: var(--accordion-btn-color); transition: background-color 0.5s ease; }
+        .list-group-item { background-color: transparent; border-color: var(--border-color); }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>✅ เช็กชื่อนักกีฬาวอลเลย์บอล IT 🏐</h1>
-        
-        <div class="date-selector-container">
-            <label for="date-selector"><strong>เลือกวันที่:</strong></label>
-            <input type="date" id="date-selector">
-        </div>
 
-        <form id="attendance-form">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ชื่อ</th>
-                        <th style="text-align: center;">
-                            มาทั้งหมด <input type="checkbox" id="select-all-checkbox" title="เลือกทั้งหมด">
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="student-table-body"></tbody>
-            </table>
-
-            <div class="button-group">
-                <button type="button" id="edit-btn" class="action-button">✏️ แก้ไข</button>
-                <button type="submit" id="save-btn" class="action-button">💾 บันทึก</button>
-            </div>
-        </form>
-
-        <hr style="margin: 2.5rem 0; border: 1px solid #e9ecef;">
-
-        <h2>📜 ประวัติการเช็กชื่อ</h2>
-        <div id="history-container"></div>
-        <button id="export-btn" class="action-button">📥 ดาวน์โหลดประวัติทั้งหมด (CSV)</button>
+    <div class="theme-switch-wrapper">
+        <i class="bi bi-sun-fill"></i>
+        <label class="theme-switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider"></span>
+        </label>
+        <i class="bi bi-moon-stars-fill"></i>
     </div>
 
+    <div class="container main-container" data-aos="fade-up">
+        <header class="text-center mb-5">
+            <h1 class="display-5 fw-bold main-header">✅ ระบบเช็กชื่อนักกีฬา IT</h1>
+        </header>
+        <main>
+            <section class="mb-5" data-aos="fade-up" data-aos-delay="100">
+                <div class="card border-0 shadow-sm h-100" style="background-color: transparent;">
+                    <div class="card-body p-lg-4">
+                        <div class="input-group mb-4"><span class="input-group-text fw-bold border-0"><i class="bi bi-calendar-event me-2"></i>เลือกวันที่</span><input type="date" id="date-selector" class="form-control border-0"></div>
+                        <form id="attendance-form">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead><tr><th scope="col">ชื่อ-สกุล (ชื่อเล่น)</th><th scope="col" class="text-center" style="width: 100px;"><div class="form-check form-check-inline"><input class="form-check-input fs-5" type="checkbox" id="select-all-checkbox" title="เลือกทั้งหมด"><label class="form-check-label" for="select-all-checkbox">มา</label></div></th></tr></thead>
+                                    <tbody id="student-table-body"></tbody>
+                                </table>
+                            </div>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3"><button type="button" id="edit-btn" class="btn btn-outline-secondary px-4"><i class="bi bi-pencil me-2"></i>แก้ไข</button><button type="submit" id="save-btn" class="btn btn-success px-4"><i class="bi bi-check-circle me-2"></i>บันทึก</button></div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+            <section data-aos="fade-up" data-aos-delay="200">
+                <div class="d-flex justify-content-between align-items-center mb-3"><h2 class="h4 mb-0 fw-bold">📜 ประวัติการเช็กชื่อ</h2><button id="clear-history-btn" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash3 me-1"></i> ล้างทั้งหมด</button></div>
+                <div class="accordion" id="history-container"></div>
+                <div class="d-grid mt-4"><button id="export-btn" class="btn btn-primary"><i class="bi bi-download me-2"></i> ดาวน์โหลดประวัติทั้งหมด (CSV)</button></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
     <script>
-        const studentList = [
-            "นายพรหมพิริยะ แสงพชร (เติ้ล)", "นายภีรภัทร มีโพธิ์สม (ปลาย)", "นายณัฐดนย์ ปัญญานาม (แม็ค)", "นายธีระวัฒน์ ศรีประภา (แฟรงค์)", "นายปิยะ คงไทย (BM)", "นายพนธกร ภูบาลี (หมอก)", 
-             "นายธนกร มั่งสูงเนิน (กร)", "นายณัฐกานต์ บัวทุม (โอ้)", "นายสิรเยส สนเคหงษ์ (เยส)", "นายนฤเบศ แพทย์ประสิทธิ์ (เบส)", "นายศักภาวุฒ เกิดมาลัย (ยัม)", "นายธนกร รักพยัคฆ์ (คิง)", 
-            "นางสาวณัฎฐกมล เหล่าทา (น้ำเหนือ)", "นางสาวศรสวรรค์ ผินสันเทียะ (มะลิ)", "นางสาวพิมพกานต์ วงษ์จินดา (เดียร์)", "นางสาวอภิชญา รัมมะไม (ปีใหม่)", "นางสาวจิตรวดี คงขาว (หนามเตย)", "นางสาวลินดา เชียร (ลินดา)","นางสาวกัญญาณัฐ กลมวง (ไอวี่)" 
-            ,"นางสาวกรรณิกา จ้อยบำรุง (เชียร์)" ,"นางสาวตรีทิพย์นิภา สุขสมพลอยง (หญิง)"
-        ];
-        const STORAGE_KEY = 'attendanceSystemHistory_v2';
+        const studentList=["นายพรหมพิริยะ แสงพชร (เติ้ล)","นายภีรภัทร มีโพธิ์สม (ปลาย)","นายณัฐดนย์ ปัญญานาม (แม็ค)","นายธีระวัฒน์ ศรีประภา (แฟรงค์)","นายปิยะ คงไทย (BM)","นายพนธกร ภูบาลี (หมอก)","นายธนกร มั่งสูงเนิน (กร)","นายณัฐกานต์ บัวทุม (โอ้)","นายสิรเยส สนเคหงษ์ (เยส)","นายนฤเบศ แพทย์ประสิทธิ์ (เบส)","นายศักภาวุฒ เกิดมาลัย (ยัม)","นายธนกร รักพยัคฆ์ (คิง)","นางสาวณัฎฐกมล เหล่าทา (น้ำเหนือ)","นางสาวศรสวรรค์ ผินสันเทียะ (มะลิ)","นางสาวพิมพกานต์ วงษ์จินดา (เดียร์)","นางสาวอภิชญา รัมมะไม (ปีใหม่)","นางสาวจิตรวดี คงขาว (หนามเตย)","นางสาวลินดา เชียร (ลินดา)","นางสาวกัญญาณัฐ กลมวง (ไอวี่)","นางสาวกรรณิกา จ้อยบำรุง (เชียร์)","นางสาวตรีทิพย์นิภา สุขสมพลอย (หญิง)"];
+        const STORAGE_KEY='attendanceSystemHistory_v2';
+        const THEME_KEY='attendanceTheme';
+        const dateSelector=document.getElementById('date-selector');
+        const tableBody=document.getElementById('student-table-body');
+        const editBtn=document.getElementById('edit-btn');
+        const saveBtn=document.getElementById('save-btn');
+        const selectAllCheckbox=document.getElementById('select-all-checkbox');
+        const historyContainer=document.getElementById('history-container');
+        const clearHistoryBtn=document.getElementById('clear-history-btn');
+        const exportBtn=document.getElementById('export-btn');
+        const themeToggle=document.getElementById('theme-toggle');
 
-        const dateSelector = document.getElementById('date-selector');
-        const tableBody = document.getElementById('student-table-body');
-        const editBtn = document.getElementById('edit-btn');
-        const saveBtn = document.getElementById('save-btn');
-        const form = document.getElementById('attendance-form');
-        const exportBtn = document.getElementById('export-btn');
-        const selectAllCheckbox = document.getElementById('select-all-checkbox');
+        const getHistory=()=>JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
+        const saveHistory=(history)=>localStorage.setItem(STORAGE_KEY,JSON.stringify(history));
 
-        function getHistory() {
-            return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-        }
-
-        function saveHistory(history) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
-        }
-
-        function renderStudentList() {
-            tableBody.innerHTML = studentList.map(student => `
-                <tr>
-                    <td>${student}</td>
-                    <td><input type="checkbox" data-student="${student}" disabled></td>
-                </tr>
-            `).join('');
-        }
-
-        function setMode(mode) {
-            const checkboxes = document.querySelectorAll('#student-table-body input[type="checkbox"]');
-            const isEditMode = mode === 'edit';
-
-            checkboxes.forEach(cb => cb.disabled = !isEditMode);
-            selectAllCheckbox.disabled = !isEditMode;
-
-            editBtn.style.display = isEditMode ? 'none' : 'block';
-            saveBtn.style.display = isEditMode ? 'block' : 'none';
-        }
-
-        function updateSelectAllCheckboxState() {
-            const checkboxes = document.querySelectorAll('#student-table-body input[type="checkbox"]');
-            const allChecked = [...checkboxes].every(cb => cb.checked);
-            selectAllCheckbox.checked = allChecked;
-        }
-
-        function loadDataForDate(dateStr) {
-            const history = getHistory();
-            const presentStudents = history[dateStr] || []; 
-
-            document.querySelectorAll('#student-table-body input[type="checkbox"]').forEach(cb => {
-                cb.checked = presentStudents.includes(cb.dataset.student);
-            });
-
-            updateSelectAllCheckboxState();
-            setMode(history[dateStr] ? 'view' : 'edit');
-        }
-
-        function handleDateChange() {
-            const selectedDate = dateSelector.value;
-            if (selectedDate) {
-                loadDataForDate(selectedDate);
-            }
-        }
-
-        function handleSave(event) {
-            event.preventDefault();
-            const selectedDate = dateSelector.value;
-            if (!selectedDate) {
-                alert('กรุณาเลือกวันที่ก่อนทำการบันทึก');
-                return;
-            }
-
-            const presentStudents = [];
-            document.querySelectorAll('#student-table-body input[type="checkbox"]:checked').forEach(cb => {
-                presentStudents.push(cb.dataset.student);
-            });
-
-            const history = getHistory();
-            history[selectedDate] = presentStudents;
-            saveHistory(history);
-            
-            alert('บันทึกข้อมูลเรียบร้อยแล้ว!');
-            loadDataForDate(selectedDate); 
-            renderHistory(); 
-        }
-
-        function renderHistory() {
-            const history = getHistory();
-            const container = document.getElementById('history-container');
-            const sortedDates = Object.keys(history).sort().reverse();
-
-            if (sortedDates.length === 0) {
-                container.innerHTML = '<p style="text-align:center;">ยังไม่มีข้อมูลในระบบ</p>';
-                return;
-            }
-
-            let tableHTML = `<table id="history-table"><thead><tr><th>วันที่</th><th>คนที่มาซ้อม</th></tr></thead><tbody>`;
-            sortedDates.forEach(date => {
-                const presentList = history[date].join(', ');
-                tableHTML += `<tr><td>${date}</td><td>${presentList || '-'}</td></tr>`;
-            });
-            tableHTML += '</tbody></table>';
-            container.innerHTML = tableHTML;
-        }
-
-        function exportToCSV() {
-            const history = getHistory();
-            if (Object.keys(history).length === 0) return alert('ไม่มีข้อมูลให้ส่งออก');
-
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "วันที่," + studentList.join(",") + "\r\n"; // Header
-
-            Object.keys(history).sort().forEach(date => {
-                const presentStudents = history[date];
-                const row = studentList.map(student => presentStudents.includes(student) ? '✓' : '').join(",");
-                csvContent += date + "," + row + "\r\n";
-            });
-
-            const link = document.createElement("a");
-            link.setAttribute("href", encodeURI(csvContent));
-            link.setAttribute("download", "attendance_export.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        function handleSelectAll(event) {
-            const isChecked = event.target.checked;
-            document.querySelectorAll('#student-table-body input[type="checkbox"]').forEach(cb => {
-                if (!cb.disabled) {
-                    cb.checked = isChecked;
-                }
-            });
-        }
-
-        // --- Initial Setup ---
-        document.addEventListener('DOMContentLoaded', () => {
-            dateSelector.value = new Date().toISOString().slice(0, 10);
-            
+        const renderStudentList=()=>{tableBody.innerHTML=studentList.map(s=>`<tr><td>${s}</td><td class="text-center"><div class="form-check form-check-inline"><input class="form-check-input fs-5" type="checkbox" data-student="${s}" disabled></div></td></tr>`).join('')};
+        const renderHistory=()=>{const history=getHistory(),sortedDates=Object.keys(history).sort((a,b)=>new Date(b)-new Date(a));if(sortedDates.length===0){historyContainer.innerHTML='<div class="text-center p-3 text-muted">ยังไม่มีข้อมูลในระบบ</div>';return}
+        historyContainer.innerHTML=sortedDates.map(date=>{const present=history[date]||[],count=present.length,id=date.replace(/-/g,'');return`<div class="accordion-item"><h2 class="accordion-header"><div class="d-flex w-100 align-items-center"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c-${id}"><strong class="me-3">${date}</strong> <span class="badge bg-secondary-subtle text-secondary-emphasis rounded-pill">มา ${count} คน</span></button><button class="btn btn-sm text-danger delete-btn me-2" data-date="${date}" title="ลบ"><i class="bi bi-trash3-fill fs-5"></i></button></div></h2><div id="c-${id}" class="accordion-collapse collapse" data-bs-parent="#history-container"><div class="accordion-body pt-0">${count>0?'<ol class="list-group list-group-flush">'+present.map(s=>`<li class="list-group-item">${s}</li>`).join('')+'</ol>':'<p class="mb-0 text-muted">ไม่มีผู้มาซ้อมในวันนี้</p>'}</div></div></div>`}).join('')};
+        const setMode=(mode)=>{const isEdit=mode==='edit';document.querySelectorAll('#student-table-body input[type="checkbox"]').forEach(cb=>cb.disabled=!isEdit);selectAllCheckbox.disabled=!isEdit;editBtn.style.display=isEdit?'none':'block';saveBtn.style.display=isEdit?'block':'none'};
+        const loadDataForDate=(date)=>{const history=getHistory(),present=history[date]||[],allCb=document.querySelectorAll('#student-table-body input');allCb.forEach(cb=>{cb.checked=present.includes(cb.dataset.student)});selectAllCheckbox.checked=allCb.length>0&&[...allCb].every(cb=>cb.checked);setMode(history[date]?'view':'edit')};
+        const handleDateChange=()=>{if(dateSelector.value)loadDataForDate(dateSelector.value)};
+        const handleSave=(e)=>{e.preventDefault();if(!dateSelector.value){Swal.fire('ผิดพลาด!','กรุณาเลือกวันที่ก่อนทำการบันทึก','error');return}const present=Array.from(document.querySelectorAll('#student-table-body input:checked')).map(cb=>cb.dataset.student);const history=getHistory();history[dateSelector.value]=present;saveHistory(history);Swal.fire({title:'สำเร็จ!',text:'บันทึกข้อมูลเรียบร้อยแล้ว',icon:'success',timer:1500,showConfirmButton:false});loadDataForDate(dateSelector.value);renderHistory()};
+        const handleClearAll=()=>{if(Object.keys(getHistory()).length===0){Swal.fire('ไม่มีข้อมูล','ยังไม่มีข้อมูลประวัติให้ลบ','info');return}
+        Swal.fire({title:'คุณแน่ใจหรือไม่?',text:"คุณต้องการลบประวัติทั้งหมดใช่ไหม การกระทำนี้ไม่สามารถย้อนกลับได้!",icon:'warning',showCancelButton:true,confirmButtonColor:'#d33',cancelButtonColor:'#6c757d',confirmButtonText:'ใช่, ลบทั้งหมด!',cancelButtonText:'ยกเลิก'}).then(r=>{if(r.isConfirmed){localStorage.removeItem(STORAGE_KEY);renderHistory();handleDateChange();Swal.fire('ลบแล้ว!','ประวัติทั้งหมดถูกลบเรียบร้อย','success')}})};
+        const handleDeleteSingle=(e)=>{const btn=e.target.closest('.delete-btn');if(!btn)return;const date=btn.dataset.date;Swal.fire({title:'ยืนยันการลบ',text:`คุณต้องการลบข้อมูลของวันที่ ${date}?`,icon:'warning',showCancelButton:true,confirmButtonColor:'#d33',cancelButtonColor:'#6c757d',confirmButtonText:'ใช่, ลบเลย',cancelButtonText:'ยกเลิก'}).then(r=>{if(r.isConfirmed){const history=getHistory();delete history[date];saveHistory(history);renderHistory();handleDateChange()}})};
+        const handleExport=()=>{const history=getHistory();if(Object.keys(history).length===0){Swal.fire('ไม่มีข้อมูล','ยังไม่มีข้อมูลให้ส่งออก','info');return}
+        let csv="data:text/csv;charset=utf-8,\uFEFF";csv+="วันที่,"+studentList.join(",")+"\r\n";Object.keys(history).sort().forEach(date=>{const present=new Set(history[date]);const row=studentList.map(s=>present.has(s)?'✓':'').join(",");csv+=date+","+row+"\r\n"});const link=document.createElement("a");link.setAttribute("href",encodeURI(csv));link.setAttribute("download",`attendance_export_${new Date().toISOString().slice(0,10)}.csv`);document.body.appendChild(link);link.click();document.body.removeChild(link)};
+        const applyTheme=(theme)=>{if(theme==='dark'){document.body.classList.add('dark-mode');themeToggle.checked=true}else{document.body.classList.remove('dark-mode');themeToggle.checked=false}};themeToggle.addEventListener('change',()=>{const newTheme=themeToggle.checked?'dark':'light';localStorage.setItem(THEME_KEY,newTheme);applyTheme(newTheme)});
+        
+        document.addEventListener('DOMContentLoaded',()=>{
+            AOS.init({duration:600,once:true,});
+            const savedTheme=localStorage.getItem(THEME_KEY)||'light';
+            applyTheme(savedTheme);
+            dateSelector.value=new Date().toISOString().slice(0,10);
             renderStudentList();
             handleDateChange();
             renderHistory();
-
-            dateSelector.addEventListener('change', handleDateChange);
-            editBtn.addEventListener('click', () => setMode('edit'));
-            form.addEventListener('submit', handleSave);
-            exportBtn.addEventListener('click', exportToCSV);
-            selectAllCheckbox.addEventListener('change', handleSelectAll);
-            tableBody.addEventListener('change', (e) => {
-                if (e.target.matches('input[type="checkbox"]')) {
-                    updateSelectAllCheckboxState();
-                }
-            });
+            dateSelector.addEventListener('change',handleDateChange);
+            document.querySelector('#attendance-form').addEventListener('submit',handleSave);
+            editBtn.addEventListener('click',()=>setMode('edit'));
+            selectAllCheckbox.addEventListener('change',(e)=>{document.querySelectorAll('#student-table-body input[type="checkbox"]:not(:disabled)').forEach(cb=>cb.checked=e.target.checked)});
+            clearHistoryBtn.addEventListener('click',handleClearAll);
+            historyContainer.addEventListener('click',handleDeleteSingle);
+            exportBtn.addEventListener('click',handleExport);
         });
     </script>
 </body>
